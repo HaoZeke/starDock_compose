@@ -100,6 +100,33 @@ services:
       - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
       - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
+  # Plex
+  emby:
+    image: nvllsvm/emby-unlocked
+    container_name: "ArchEmby"
+    hostname: "ArchEmbyDocker"
+    restart: unless-stopped
+    # network_mode: host
+    networks:
+      - webgateway
+    expose:
+      - 8096
+    labels:
+      - "traefik.backend=emby"
+      - "traefik.port=8096"
+      - "traefik.frontend.rule=PathPrefix: /emby"
+    volumes:
+      - ${EMBY_CONFIG_PATH}:/config
+      - ${EMBY_TRANSCODE_PATH}:/transcode
+      - ${EMBY_TV_PATH}:/media/Storage/TV
+      - ${EMBY_ANIME_PATH}:/media/Storage/Anime
+      - ${EMBY_MOVIES_PATH}:/media/Storage/Movies
+      - ${EMBY_VIDEOS_PATH}:/media/Storage/Videos
+      - ${EMBY_EXTRA_TV_PATH}:/media/Xiaomi/TV
+      - ${EMBY_EXTRA_ANIME_PATH}:/media/Xiaomi/Anime
+      - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
+      - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
+
   # Calibre web
   caliweb:
     image: technosoft2000/calibre-web
@@ -141,7 +168,7 @@ services:
   # Interface and Backends
   ##########################
 
-  # PlexPy
+  # PlexPy [Stats]
   plexpy:
     image: linuxserver/plexpy:latest
     container_name: "PlexPy"
@@ -159,7 +186,7 @@ services:
     depends_on:
       - plex
 
-  # Ombi
+  # Ombi [Requests]
   ombi:
     image: linuxserver/ombi:latest
     container_name: "Ombi"
@@ -176,7 +203,82 @@ services:
     depends_on:
       - plex
 
-  # Organizr
+  # Jackett [Tracker Aggregation]
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: "Jackett"
+    networks:
+      - webgateway
+    expose:
+      - 9117
+    labels:
+      - "traefik.backend=jackett"
+      - "traefik.frontend.rule=PathPrefix: /jackett/"
+      - "traefik.port=9117"
+    volumes:
+      - ${JACKETT_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+
+  # Transmission [Torrents]
+  transmission:
+    image: linuxserver/transmission:latest
+    container_name: "Transmission"
+    networks:
+      - webgateway
+    expose:
+      - 9091
+      - 51413
+    labels:
+      - "traefik.backend=transmission"
+      - "traefik.frontend.rule=PathPrefix: /transmission/"
+      - "traefik.port=9091"
+      - "traefik.port=51413"
+    volumes:
+      - ${TRANSMISSION_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - plex
+
+  # Radarr [Movies]
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: "Radarr"
+    networks:
+      - webgateway
+    expose:
+      - 7878
+    labels:
+      - "traefik.backend=radarr"
+      - "traefik.frontend.rule=PathPrefix: /radarr/"
+      - "traefik.port=7878"
+    volumes:
+      - ${RADARR_CONFIG_PATH}:/config
+      - ${PLEX_MOVIES_PATH}:/movies
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
+
+  # Sonarr [TV Stuff]
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: "Sonarr"
+    networks:
+      - webgateway
+    expose:
+      - 8989
+    labels:
+      - "traefik.backend=sonarr"
+      - "traefik.frontend.rule=PathPrefix: /sonarr/"
+      - "traefik.port=8989"
+    volumes:
+      - ${SONARR_CONFIG_PATH}:/config
+      - ${PLEX_TV_PATH}:/tv
+      - ${PLEX_ANIME_PATH}:/anime
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
+
+  # Organizr [Frontend]
   organizr:
     image: lsiocommunity/organizr
     container_name: "Organizr"
