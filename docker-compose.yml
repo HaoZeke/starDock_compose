@@ -90,6 +90,9 @@ services:
       - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
       - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
+  # Interface and Backends
+  ##########################
+
   # PlexPy
   plexpy:
     image: linuxserver/plexpy:latest
@@ -104,6 +107,17 @@ services:
       - "traefik.port=8181"
     depends_on:
       - plex
+
+  # Organizr
+  organizr:
+    image: lsiocommunity/organizr
+    networks:
+      - webgateway
+    volumes:
+      - ${ORGANIZR_CONFIG_PATH}:/config
+    labels:
+      - "traefik.backend=organizr"
+      - "traefik.frontend.rule=Host:traefik.docker.localhost"
 
 networks:
     webgateway:
