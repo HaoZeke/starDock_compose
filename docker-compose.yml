@@ -1,8 +1,13 @@
+#########################
+# StarDock Compose File #
+#########################
+
 version: '3'
 
 services:
 
-  # Reverse Proxy Stuff
+  # Reverse Proxy
+  ################
 
   # Traefik
 
@@ -20,6 +25,7 @@ services:
       - ./configs/traefik.toml:/traefik.toml
 
   # Management Tools
+  ###################
 
   # WatchTower
 
@@ -40,7 +46,7 @@ services:
     volumes:
       - ${DSOCK}:/var/run/docker.sock
 
-  # Portrainer Setup
+  # Portrainer
 
   portainer:
     image: portainer/portainer
@@ -54,6 +60,34 @@ services:
     volumes:
       - ${PORTAINER_DATA_PATH}:/data
       - ${DSOCK}:/var/run/docker.sock
+
+  # Media Servers
+  ################
+
+  # Plex
+  plex:
+    image: linuxserver/plex 
+    container_name: "ArchPlex"
+    hostname: "ArchPlexDocker"
+    restart: unless-stopped
+    networks:
+      - webgateway
+    labels:
+      - "traefik.backend=plex"
+      - "traefik.port=32400"
+      - "traefik.frontend.rule=PathPrefixStrip: /plex/"
+    volumes:
+      - /home/haozeke/Storage/Docker/archPlex/config:/config
+      - /home/haozeke/Storage/Docker/archPlex/transcode:/transcode
+      - /home/haozeke/Storage/Docker/archPlex/logs:/logs
+      - /home/haozeke/Storage/TV:/data/Storage/TV
+      - /home/haozeke/Storage/Anime:/data/Storage/Anime
+      - /home/haozeke/Storage/Movies:/data/Storage/Movies
+      - /home/haozeke/Storage/Videos:/data/Storage/Videos
+      - /home/haozeke/Storage/Xiaomi/TV:/data/Xiaomi/TV
+      - /home/haozeke/Storage/Xiaomi/Anime:/data/Xiaomi/Anime
+      - /home/haozeke/Storage/Xiaomi/Movies:/data/Xiaomi/Movies
+      - /home/haozeke/Storage/Xiaomi/Videos:/data/Xiaomi/Videos
 
 networks:
     webgateway:
