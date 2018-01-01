@@ -78,17 +78,17 @@ services:
     #   - "traefik.port=32400"
     #   - "traefik.frontend.rule=PathPrefixStrip: /plex/"
     volumes:
-      - /home/haozeke/Storage/Docker/archPlex/config:/config
-      - /home/haozeke/Storage/Docker/archPlex/transcode:/transcode
-      - /home/haozeke/Storage/Docker/archPlex/logs:/logs
-      - /home/haozeke/Storage/TV:/data/Storage/TV
-      - /home/haozeke/Storage/Anime:/data/Storage/Anime
-      - /home/haozeke/Storage/Movies:/data/Storage/Movies
-      - /home/haozeke/Storage/Videos:/data/Storage/Videos
-      - /home/haozeke/Storage/Xiaomi/TV:/data/Xiaomi/TV
-      - /home/haozeke/Storage/Xiaomi/Anime:/data/Xiaomi/Anime
-      - /home/haozeke/Storage/Xiaomi/Movies:/data/Xiaomi/Movies
-      - /home/haozeke/Storage/Xiaomi/Videos:/data/Xiaomi/Videos
+      - ${PLEX_CONFIG_PATH}:/config
+      - ${PLEX_TRANSCODE_PATH}:/transcode
+      - ${PLEX_LOGS_PATH}:/logs
+      - ${PLEX_TV_PATH}:/data/Storage/TV
+      - ${PLEX_ANIME_PATH}:/data/Storage/Anime
+      - ${PLEX_MOVIES_PATH}:/data/Storage/Movies
+      - ${PLEX_VIDEOS_PATH}:/data/Storage/Videos
+      - ${PLEX_EXTRA_TV_PATH}:/data/Xiaomi/TV
+      - ${PLEX_EXTRA_ANIME_PATH}:/data/Xiaomi/Anime
+      - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
+      - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
   # PlexPy
   plexpy:
