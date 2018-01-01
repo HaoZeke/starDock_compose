@@ -68,14 +68,15 @@ services:
   plex:
     image: linuxserver/plex 
     container_name: "ArchPlex"
-    hostname: "ArchPlexDocker"
+    # hostname: "ArchPlexDocker"
     restart: unless-stopped
-    networks:
-      - webgateway
-    labels:
-      - "traefik.backend=plex"
-      - "traefik.port=32400"
-      - "traefik.frontend.rule=PathPrefixStrip: /plex/"
+    network_mode: host
+    # networks:
+    #   - webgateway
+    # labels:
+    #   - "traefik.backend=plex"
+    #   - "traefik.port=32400"
+    #   - "traefik.frontend.rule=PathPrefixStrip: /plex/"
     volumes:
       - /home/haozeke/Storage/Docker/archPlex/config:/config
       - /home/haozeke/Storage/Docker/archPlex/transcode:/transcode
