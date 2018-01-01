@@ -13,17 +13,21 @@ Currently should be running:
 * Airsonic for music streaming
 * Calibre-web for library [ebook] delivery
 * Plex for transcoding and delivering videos
+* Traefik to rewrite to locations on a single domain
+* Watchtower to update your images every 12 hours with email notifications
 
 ## Setup
 
-
-## Customizing
-
-Extending this is essentially done by either updating the compose file itself (not recommended) or by adding templates as explained [here](https://github.com/portainer/portainer-compose#how-can-i-specify-my-own-templates).
-
-Basically, add templates.
-
-The linuxserver templates are setup already.
+```bash
+# Get the repo
+git clone http://github.com/HaoZeke/starDock_compose
+# Copy and edit the sample .env file
+cp .env.sample .env
+vim .env
+# Run the thing
+docker-compose up -d
+# Profit
+```
 
 ## Inspiration
 
