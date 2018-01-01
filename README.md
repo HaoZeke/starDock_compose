@@ -13,6 +13,7 @@ Currently should be running:
 * Airsonic for music streaming
 * Calibre-web for library [ebook] delivery
 * Plex for transcoding and delivering videos
+* Plexpy for stats
 * Traefik to rewrite to locations on a single domain
 * Watchtower to update your images every 12 hours with email notifications
 
@@ -37,8 +38,9 @@ This setup was inspired by:
 * [Portrainer docker-compose](https://github.com/portainer/portainer-compose)
 * [Linuxserver.io templates](https://github.com/linuxserver/docker-templates)
 * [evertamos' dockerportainer with letsencrypt](https://github.com/evertramos/docker-portainer-letsencrypt)
+* [dockyard](https://github.com/420m/dockyard)
 
 ## Licenses
 
 This is technically under the MIT license.
-However evertamos' repo is under the GPLv3.
+However evertamos' repo and dockyard are under the GPLv3.
