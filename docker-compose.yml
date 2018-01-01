@@ -23,8 +23,9 @@ services:
     depends_on:
       - portainer
       - plex
-      - plexpy
       - organizr
+      - music
+      - caliweb
     volumes:
       - ${DSOCK}:/var/run/docker.sock
       - ./configs/traefik.toml:/traefik.toml
@@ -41,6 +42,8 @@ services:
     command: --cleanup --interval 43200
     networks:
       - webgateway
+    labels:
+      - "traefik.enable=false"
     environment:
       - WATCHTOWER_NOTIFICATIONS=email
       - WATCHTOWER_NOTIFICATION_EMAIL_FROM=${WATCHTOWER_NOTIFICATION_EMAIL_FROM}
@@ -138,23 +141,24 @@ services:
   # Interface and Backends
   ##########################
 
-  # PlexPy
-  plexpy:
-    image: linuxserver/plexpy:latest
-    container_name: "PlexPy"
-    networks:
-      - webgateway
-    expose:
-      - 8181
-    labels:
-      - "traefik.backend=plexpy"
-      - "traefik.frontend.rule=PathPrefix: /plexpy"
-      - "traefik.port=8181"
-    volumes:
-      - ${PLEXPY_CONFIG_PATH}:/config
-      - ${PLEX_LOGS_PATH}:/logs
-    depends_on:
-      - plex
+  # # PlexPy
+  # plexpy:
+  #   image: linuxserver/plexpy:latest
+  #   container_name: "PlexPy"
+  #   networks:
+  #     - webgateway
+  #   expose:
+  #     - 8181
+  #   labels:
+  #     - "traefik.backend=plexpy"
+  #     # - "traefik.frontend.rule=PathPrefix: /plexpy"
+  #     - "traefik.frontend.rule=Host:plexpy.docker.localhost"
+  #     - "traefik.port=8181"
+  #   volumes:
+  #     - ${PLEXPY_CONFIG_PATH}:/config
+  #     - ${PLEX_LOGS_PATH}:/logs
+  #   depends_on:
+  #     - plex
 
   # Organizr
   organizr:
