@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+
+  # Reverse Proxy Stuff
+
+  # Traefik
+
+  proxy:
+    image: traefik
+    container_name: Traefik
+    command: --logLevel=DEBUG
+    networks:
+      - webgateway
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ${DSOCK}:/var/run/docker.sock
+      - ./configs/traefik.toml:/traefik.toml
+
+  # Portrainer Setup
+
+  portainer:
+    container_name: mainPortainer
+    restart: unless-stopped
+    networks:
+      - webgateway
+    image: portainer/portainer
+    labels:
+      - "traefik.backend=portainer"
+      - "traefik.frontend.rule=Host:portainer.docker.localhost"
+    volumes:
+      - ${PORTAINER_DATA_PATH}:/data
+      - ${DSOCK}:/var/run/docker.sock
+
+networks:
+    webgateway:
+      driver: bridge

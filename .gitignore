@@ -1,0 +1,8 @@
+# Random generic stuff
+.DS_Store
+.vagrant
+*.swp
+
+# For local envs
+.env
+create_network.sh
