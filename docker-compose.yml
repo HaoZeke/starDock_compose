@@ -20,6 +20,11 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
+    depends_on:
+      - portainer
+      - plex
+      - plexpy
+      - organizr
     volumes:
       - ${DSOCK}:/var/run/docker.sock
       - ./configs/traefik.toml:/traefik.toml
@@ -68,15 +73,17 @@ services:
   plex:
     image: linuxserver/plex 
     container_name: "ArchPlex"
-    # hostname: "ArchPlexDocker"
+    hostname: "ArchPlexDocker"
     restart: unless-stopped
-    network_mode: host
-    # networks:
-    #   - webgateway
-    # labels:
-    #   - "traefik.backend=plex"
-    #   - "traefik.port=32400"
-    #   - "traefik.frontend.rule=PathPrefixStrip: /plex/"
+    # network_mode: host
+    networks:
+      - webgateway
+    expose:
+      - 32400
+    labels:
+      - "traefik.backend=plex"
+      - "traefik.port=32400"
+      - "traefik.frontend.rule=Host:plex.docker.localhost"
     volumes:
       - ${PLEX_CONFIG_PATH}:/config
       - ${PLEX_TRANSCODE_PATH}:/transcode
@@ -90,34 +97,56 @@ services:
       - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
       - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
+  # Calibre web
+  caliweb:
+    image: technosoft2000/calibre-web
+    container_name: "CalibreWeb"
+    networks:
+      - webgateway
+    expose:
+      - 8083
+    labels:
+      - "traefik.backend=caliweb"
+      - "traefik.frontend.rule=Host:calibre.docker.localhost"
+      - "traefik.port=8083"
+    environment:
+      - USE_CONFIG_DIR=true
+    volumes:
+      - ${CALIBRE_APP_PATH}:/calibre-web
+      - ${CALIBRE_LIBRARY_PATH}:/books 
+
   # Interface and Backends
   ##########################
 
   # PlexPy
   plexpy:
     image: linuxserver/plexpy:latest
+    container_name: "PlexPy"
     networks:
       - webgateway
+    expose:
+      - 8181
+    labels:
+      - "traefik.backend=plexpy"
+      - "traefik.frontend.rule=PathPrefixStrip: /plexpy"
+      - "traefik.port=8181"
     volumes:
       - ${PLEXPY_CONFIG_PATH}:/config
       - ${PLEX_LOGS_PATH}:/logs
-    labels:
-      - "traefik.backend=plexpy"
-      - "traefik.frontend.rule=PathPrefixStrip: /plexpy/"
-      - "traefik.port=8181"
     depends_on:
       - plex
 
   # Organizr
   organizr:
     image: lsiocommunity/organizr
+    container_name: "Organizr"
     networks:
       - webgateway
     volumes:
       - ${ORGANIZR_CONFIG_PATH}:/config
     labels:
       - "traefik.backend=organizr"
-      - "traefik.frontend.rule=Host:traefik.docker.localhost"
+      - "traefik.frontend.rule=PathPrefixStrip: /"
 
 networks:
     webgateway:
