@@ -90,6 +90,21 @@ services:
       - /home/haozeke/Storage/Xiaomi/Movies:/data/Xiaomi/Movies
       - /home/haozeke/Storage/Xiaomi/Videos:/data/Xiaomi/Videos
 
+  # PlexPy
+  plexpy:
+    image: linuxserver/plexpy:latest
+    networks:
+      - webgateway
+    volumes:
+      - ${PLEXPY_CONFIG_PATH}:/config
+      - ${PLEX_LOGS_PATH}:/logs
+    labels:
+      - "traefik.backend=plexpy"
+      - "traefik.frontend.rule=PathPrefixStrip: /plexpy/"
+      - "traefik.port=8181"
+    depends_on:
+      - plex
+
 networks:
     webgateway:
       driver: bridge
