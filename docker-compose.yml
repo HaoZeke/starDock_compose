@@ -14,7 +14,6 @@ services:
   proxy:
     image: traefik
     container_name: Traefik
-    command: --logLevel=DEBUG
     networks:
       - webgateway
     ports:
@@ -157,6 +156,23 @@ services:
     volumes:
       - ${PLEXPY_CONFIG_PATH}:/config
       - ${PLEX_LOGS_PATH}:/logs
+    depends_on:
+      - plex
+
+  # Ombi
+  ombi:
+    image: linuxserver/ombi:latest
+    container_name: "Ombi"
+    networks:
+      - webgateway
+    expose:
+      - 3579
+    labels:
+      - "traefik.backend=ombi"
+      - "traefik.frontend.rule=PathPrefix: /ombi/"
+      - "traefik.port=3579"
+    volumes:
+      - ${OMBI_CONFIG_PATH}:/config
     depends_on:
       - plex
 
