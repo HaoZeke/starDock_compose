@@ -22,14 +22,14 @@ services:
   # Portrainer Setup
 
   portainer:
-    container_name: mainPortainer
+    container_name: Portainer
     restart: unless-stopped
     networks:
       - webgateway
     image: portainer/portainer
     labels:
       - "traefik.backend=portainer"
-      - "traefik.frontend.rule=Host:portainer.docker.localhost"
+      - "traefik.frontend.rule=PathPrefixStrip: /portainer/"
     volumes:
       - ${PORTAINER_DATA_PATH}:/data
       - ${DSOCK}:/var/run/docker.sock
