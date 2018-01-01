@@ -113,7 +113,27 @@ services:
       - USE_CONFIG_DIR=true
     volumes:
       - ${CALIBRE_APP_PATH}:/calibre-web
-      - ${CALIBRE_LIBRARY_PATH}:/books 
+      - ${CALIBRE_LIBRARY_PATH}:/books
+
+  # Airsonic
+  music:
+    image: linuxserver/airsonic
+    container_name: "Music"
+    networks:
+      - webgateway
+    expose:
+      - 4040
+    labels:
+      - "traefik.backend=music"
+      - "traefik.frontend.rule=Host:music.docker.localhost"
+      - "traefik.port=4040"
+    volumes:
+      - ${MUSIC_CONFIG_PATH}:/config
+      - ${MUSIC_LIBRARY_PATH}:/music
+      - ${MUSIC_PLAYLISTS_PATH}:/playlists
+      - ${MUSIC_PODCASTS_PATH}:/podcasts
+      - ${MUSIC_MEDIA_PATH}:/media
+
 
   # Interface and Backends
   ##########################
@@ -128,7 +148,7 @@ services:
       - 8181
     labels:
       - "traefik.backend=plexpy"
-      - "traefik.frontend.rule=PathPrefixStrip: /plexpy"
+      - "traefik.frontend.rule=PathPrefix: /plexpy"
       - "traefik.port=8181"
     volumes:
       - ${PLEXPY_CONFIG_PATH}:/config
