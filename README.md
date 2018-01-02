@@ -39,6 +39,7 @@ This setup was inspired by:
 * [Linuxserver.io templates](https://github.com/linuxserver/docker-templates)
 * [evertamos' dockerportainer with letsencrypt](https://github.com/evertramos/docker-portainer-letsencrypt)
 * [dockyard](https://github.com/420m/dockyard)
+* [Plex proxy help](https://www.reddit.com/r/PleX/comments/3xz4ph/plex_behind_a_ssl_nginx_reverse_proxy/)
 
 ## Licenses
 
