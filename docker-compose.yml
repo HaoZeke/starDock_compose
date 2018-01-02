@@ -33,7 +33,7 @@ services:
       - ${ORGANIZR_CONFIG_PATH}:/config
 
   php:
-    build: dockerfiles/php
+    image: haozeke/php_zip_alpine
     container_name: php
     networks:
       - webgateway
