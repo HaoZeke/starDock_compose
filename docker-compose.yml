@@ -39,7 +39,7 @@ services:
       - webgateway
     volumes:
       - ./configs/php:/etc/php
-      - ./Organizr:/config/www/Dashboard
+      - ./Organizr:/www/Dashboard
       - ${ORGANIZR_CONFIG_PATH}:/config    
 
 
