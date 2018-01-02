@@ -67,6 +67,8 @@ services:
     image: portainer/portainer
     container_name: Portainer
     restart: unless-stopped
+    ports:
+      - 4600:9000
     networks:
       - webgateway
     expose:
@@ -166,23 +168,19 @@ services:
   # # Interface and Backends
   # ##########################
 
-  # # PlexPy [Stats]
-  # plexpy:
-  #   image: linuxserver/plexpy:latest
-  #   container_name: "PlexPy"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 8181
-  #   labels:
-  #     - "traefik.backend=plexpy"
-  #     - "traefik.frontend.rule=PathPrefix: /plexpy"
-  #     - "traefik.port=8181"
-  #   volumes:
-  #     - ${PLEXPY_CONFIG_PATH}:/config
-  #     - ${PLEX_LOGS_PATH}:/logs
-  #   depends_on:
-  #     - plex
+  # PlexPy [Stats]
+  plexpy:
+    image: linuxserver/plexpy:latest
+    container_name: "PlexPy"
+    networks:
+      - webgateway
+    expose:
+      - 8181
+    volumes:
+      - ${PLEXPY_CONFIG_PATH}:/config
+      - ${PLEX_LOGS_PATH}:/logs
+    depends_on:
+      - plex
 
   # # Ombi [Requests]
   # ombi:
