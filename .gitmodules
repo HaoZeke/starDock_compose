@@ -1,0 +1,3 @@
+[submodule "Organizr"]
+	path = Organizr
+	url = https://github.com/causefx/Organizr.git

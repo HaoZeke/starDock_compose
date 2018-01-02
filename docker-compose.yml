@@ -9,34 +9,38 @@ services:
   # Reverse Proxy
   ################
 
-  # Traefik
+  # Nginx
 
   proxy:
-    image: nginx:alpine
+    image: nmhung1210/nginx-alpine-amplify
     container_name: Nginx
     networks:
       - webgateway
     ports:
       - "80:80"
+    environment:
+      - API_KEY=${AMPLIFY_API_KEY}
     depends_on:
-      - php
       - portainer
       - plex
-    #   - plexpy
-    #   - organizr
+      - plexpy
     #   - music
-    #   - caliweb
+      - caliweb
     volumes:
       - ${DSOCK}:/var/run/docker.sock
       - ./configs/nginx:/etc/nginx
+      - ./Organizr:/www/Dashboard
+      - ${ORGANIZR_CONFIG_PATH}:/config
 
   php:
-    image: php:fpm
-    container_name: Nginx-PHP
+    build: dockerfiles/php
+    container_name: php
     networks:
       - webgateway
     volumes:
       - ./configs/php:/etc/php
+      - ./Organizr:/config/www/Dashboard
+      - ${ORGANIZR_CONFIG_PATH}:/config    
 
 
   # Management Tools
@@ -182,109 +186,74 @@ services:
     depends_on:
       - plex
 
-  # # Ombi [Requests]
-  # ombi:
-  #   image: linuxserver/ombi:latest
-  #   container_name: "Ombi"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 3579
-  #   labels:
-  #     - "traefik.backend=ombi"
-  #     - "traefik.frontend.rule=PathPrefix: /ombi/"
-  #     - "traefik.port=3579"
-  #   volumes:
-  #     - ${OMBI_CONFIG_PATH}:/config
-  #   depends_on:
-  #     - plex
+  # Ombi [Requests]
+  ombi:
+    image: linuxserver/ombi:latest
+    container_name: "Ombi"
+    networks:
+      - webgateway
+    expose:
+      - 3579
+    volumes:
+      - ${OMBI_CONFIG_PATH}:/config
+    depends_on:
+      - plex
 
-  # # Jackett [Tracker Aggregation]
-  # jackett:
-  #   image: linuxserver/jackett:latest
-  #   container_name: "Jackett"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 9117
-  #   labels:
-  #     - "traefik.backend=jackett"
-  #     - "traefik.frontend.rule=PathPrefix: /jackett/"
-  #     - "traefik.port=9117"
-  #   volumes:
-  #     - ${JACKETT_CONFIG_PATH}:/config
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  # Jackett [Tracker Aggregation]
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: "Jackett"
+    networks:
+      - webgateway
+    expose:
+      - 9117
+    volumes:
+      - ${JACKETT_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # # Transmission [Torrents]
-  # transmission:
-  #   image: linuxserver/transmission:latest
-  #   container_name: "Transmission"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 9091
-  #     - 51413
-  #   labels:
-  #     - "traefik.backend=transmission"
-  #     - "traefik.frontend.rule=PathPrefix: /transmission/"
-  #     - "traefik.port=9091"
-  #     - "traefik.port=51413"
-  #   volumes:
-  #     - ${TRANSMISSION_CONFIG_PATH}:/config
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #   depends_on:
-  #     - plex
+  # Transmission [Torrents]
+  transmission:
+    image: linuxserver/transmission:latest
+    container_name: "Transmission"
+    networks:
+      - webgateway
+    expose:
+      - 9091
+    volumes:
+      - ${TRANSMISSION_CONFIG_PATH}:/config
+      - ${TRANSMISSION_WATCH_PATH}:/watch
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # # Radarr [Movies]
-  # radarr:
-  #   image: linuxserver/radarr:latest
-  #   container_name: "Radarr"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 7878
-  #   labels:
-  #     - "traefik.backend=radarr"
-  #     - "traefik.frontend.rule=PathPrefix: /radarr/"
-  #     - "traefik.port=7878"
-  #   volumes:
-  #     - ${RADARR_CONFIG_PATH}:/config
-  #     - ${PLEX_MOVIES_PATH}:/movies
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #   depends_on:
-  #     - transmission
+  # Radarr [Movies]
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: "Radarr"
+    networks:
+      - webgateway
+    expose:
+      - 7878
+    volumes:
+      - ${RADARR_CONFIG_PATH}:/config
+      - ${PLEX_MOVIES_PATH}:/movies
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
 
-  # # Sonarr [TV Stuff]
-  # sonarr:
-  #   image: linuxserver/sonarr:latest
-  #   container_name: "Sonarr"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 8989
-  #   labels:
-  #     - "traefik.backend=sonarr"
-  #     - "traefik.frontend.rule=PathPrefix: /sonarr/"
-  #     - "traefik.port=8989"
-  #   volumes:
-  #     - ${SONARR_CONFIG_PATH}:/config
-  #     - ${PLEX_TV_PATH}:/tv
-  #     - ${PLEX_ANIME_PATH}:/anime
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #   depends_on:
-  #     - transmission
-
-  # # Organizr [Frontend]
-  # organizr:
-  #   image: lsiocommunity/organizr
-  #   container_name: "Organizr"
-  #   networks:
-  #     - webgateway
-  #   volumes:
-  #     - ${ORGANIZR_CONFIG_PATH}:/config
-  #   labels:
-  #     - "traefik.backend=organizr"
-  #     - "traefik.frontend.rule=PathPrefixStrip: /"
+  # Sonarr [TV Stuff]
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: "Sonarr"
+    networks:
+      - webgateway
+    expose:
+      - 8989
+    volumes:
+      - ${SONARR_CONFIG_PATH}:/config
+      - ${PLEX_TV_PATH}:/tv
+      - ${PLEX_ANIME_PATH}:/anime
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
 
 networks:
     webgateway:
