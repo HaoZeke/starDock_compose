@@ -129,23 +129,19 @@ services:
   # #     - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
   # #     - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
 
-  # # Calibre web
-  # caliweb:
-  #   image: technosoft2000/calibre-web
-  #   container_name: "CalibreWeb"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 8083
-  #   labels:
-  #     - "traefik.backend=caliweb"
-  #     - "traefik.frontend.rule=Host:calibre.docker.localhost"
-  #     - "traefik.port=8083"
-  #   environment:
-  #     - USE_CONFIG_DIR=true
-  #   volumes:
-  #     - ${CALIBRE_APP_PATH}:/calibre-web
-  #     - ${CALIBRE_LIBRARY_PATH}:/books
+  # Calibre web
+  caliweb:
+    image: technosoft2000/calibre-web
+    container_name: "CalibreWeb"
+    networks:
+      - webgateway
+    expose:
+      - 8083
+    environment:
+      - USE_CONFIG_DIR=true
+    volumes:
+      - ${CALIBRE_APP_PATH}:/calibre-web
+      - ${CALIBRE_LIBRARY_PATH}:/books
 
   # # Airsonic
   # music:
