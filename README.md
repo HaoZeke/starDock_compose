@@ -17,17 +17,20 @@ Currently should be running:
 * Traefik to rewrite to locations on a single domain
 * Watchtower to update your images every 12 hours with email notifications
 
-## Setup
+## Notes
+
+The nginx dockerfile hardcodes obtaining and setting permissions for organizr.
+
+Nginx configs are in configs, and organizr is served from `/www`
+
+Other web-apps which are not dockerized and need php should also be served from `/www`
+
+`/www` is also mounted so as to not have to re-download all the apps on each build.
+
+So where `www` is mounted, simply run the following for organizr:
 
 ```bash
-# Get the repo
-git clone http://github.com/HaoZeke/starDock_compose
-# Copy and edit the sample .env file
-cp .env.sample .env
-vim .env
-# Run the thing
-docker-compose up -d
-# Profit
+gcl git@github.com:causefx/Organizr.git Dashboard
 ```
 
 ## Inspiration

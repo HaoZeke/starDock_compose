@@ -9,10 +9,10 @@ services:
   # Reverse Proxy
   ################
 
-  # Nginx
+  # Nginx with amplify and permissions for organizr
 
   proxy:
-    image: nmhung1210/nginx-alpine-amplify
+    image: haozeke/docker_nginx_amplify_alpine
     container_name: Nginx
     networks:
       - webgateway
@@ -20,17 +20,17 @@ services:
       - "80:80"
     environment:
       - API_KEY=${AMPLIFY_API_KEY}
+      - AMPLIFY_IMAGENAME="ArchDocker"
     depends_on:
       - portainer
       - plex
       - plexpy
-    #   - music
       - caliweb
     volumes:
       - ${DSOCK}:/var/run/docker.sock
       - ./configs/nginx:/etc/nginx
-      - ./Organizr:/www/Dashboard
       - ${ORGANIZR_CONFIG_PATH}:/config
+      - ${WEBAPP_PATH}:/www
 
   php:
     image: haozeke/php_zip_alpine
@@ -38,9 +38,8 @@ services:
     networks:
       - webgateway
     volumes:
-      - ./configs/php:/etc/php
-      - ./Organizr:/www/Dashboard
-      - ${ORGANIZR_CONFIG_PATH}:/config    
+      - ${ORGANIZR_CONFIG_PATH}:/config
+      - ${WEBAPP_PATH}:/www  
 
 
   # Management Tools
@@ -149,25 +148,73 @@ services:
       - ${CALIBRE_APP_PATH}:/calibre-web
       - ${CALIBRE_LIBRARY_PATH}:/books
 
-  # # Airsonic
-  # music:
-  #   image: linuxserver/airsonic
-  #   container_name: "Music"
+  # Airsonic
+  airsonic:
+    image: airsonic/airsonic
+    container_name: "Airsonic"
+    networks:
+      - webgateway
+    expose:
+      - 4040
+    environment:
+      - CONTEXT_PATH=/airsonic
+    ports:
+      - 4041:4040
+    volumes:
+      - ${MUSIC_CONFIG_PATH}:/config
+      - ${MUSIC_LIBRARY_PATH}:/music
+      - ${MUSIC_PLAYLISTS_PATH}:/playlists
+      - ${MUSIC_PODCASTS_PATH}:/podcasts
+      - ${MUSIC_MEDIA_PATH}:/media
+
+  # # MPD Icecast YMPD
+
+  # icecast:
+  #   image: vitiman/alpine-icecast:latest
+  #   container_name: "Icecast"
+  #   ports:
+  #     - "8000:8000"
+  #   expose:
+  #     - 8000
   #   networks:
   #     - webgateway
-  #   expose:
-  #     - 4040
-  #   labels:
-  #     - "traefik.backend=music"
-  #     - "traefik.frontend.rule=Host:music.docker.localhost"
-  #     - "traefik.port=4040"
-  #   volumes:
-  #     - ${MUSIC_CONFIG_PATH}:/config
-  #     - ${MUSIC_LIBRARY_PATH}:/music
-  #     - ${MUSIC_PLAYLISTS_PATH}:/playlists
-  #     - ${MUSIC_PODCASTS_PATH}:/podcasts
-  #     - ${MUSIC_MEDIA_PATH}:/media
 
+  # # Add your host volumen in path/to/... or add your own volume below
+  # mpd:
+  #   image: vitiman/alpine-mpd:latest
+  #   container_name: "MPD"
+  #   ports:
+  #     - "6600:6600"
+  #   expose:
+  #     - 6600
+  #   depends_on:
+  #     - icecast
+  #   networks:
+  #     - webgateway
+  #   volumes:
+  #     - ${MUSIC_LIBRARY_PATH}:/var/lib/mpd/music
+  #     - ${MPD_PLAYLISTS_PATH}:/var/lib/mpd/playlists
+  #     - ${MPD_DB_PATH}:/var/lib/mpd/database
+
+  # sima:
+  #   image: vitiman/alpine-sima:latest
+  #   container_name: "SIMA"
+  #   depends_on:
+  #     - mpd
+  #   networks:
+  #     - webgateway
+
+  # ympd:
+  #   image: vitiman/alpine-ympd:latest
+  #   container_name: "YMPD"
+  #   ports:
+  #     - "8080:8080"
+  #   expose:
+  #     - 8080
+  #   depends_on:
+  #     - mpd
+  #   networks:
+  #     - webgateway 
 
   # # Interface and Backends
   # ##########################
@@ -252,6 +299,23 @@ services:
       - ${PLEX_TV_PATH}:/tv
       - ${PLEX_ANIME_PATH}:/anime
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
+
+  # Headphones [Music Stuff]
+  headphones:
+    image: linuxserver/headphones:latest
+    container_name: "Headphones"
+    networks:
+      - webgateway
+    expose:
+      - 8181
+    ports:
+      - 8181:8181
+    volumes:
+      - ${HEADPHONES_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+      - ${MUSIC_LIBRARY_PATH}:/music
     depends_on:
       - transmission
 
