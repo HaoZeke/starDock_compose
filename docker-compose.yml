@@ -150,7 +150,7 @@ services:
 
   # Airsonic
   airsonic:
-    image: airsonic/airsonic
+    image: linuxserver/airsonic
     container_name: "Airsonic"
     networks:
       - webgateway
@@ -158,8 +158,6 @@ services:
       - 4040
     environment:
       - CONTEXT_PATH=/airsonic
-    ports:
-      - 4041:4040
     volumes:
       - ${MUSIC_CONFIG_PATH}:/config
       - ${MUSIC_LIBRARY_PATH}:/music
@@ -310,12 +308,25 @@ services:
       - webgateway
     expose:
       - 8181
-    ports:
-      - 8181:8181
     volumes:
       - ${HEADPHONES_CONFIG_PATH}:/config
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
       - ${MUSIC_LIBRARY_PATH}:/music
+    depends_on:
+      - transmission
+
+  # LazyLibrarian [Book Stuff]
+  lazylib:
+    image: linuxserver/lazylibrarian:latest
+    container_name: "LazyLibrarian"
+    networks:
+      - webgateway
+    expose:
+      - 5299
+    volumes:
+      - ${LAZYLIB_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+      - ${CALIBRE_LIBRARY_PATH}:/books
     depends_on:
       - transmission
 
