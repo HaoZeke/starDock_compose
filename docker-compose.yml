@@ -107,32 +107,28 @@ services:
       - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
       - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
-  # # # Emby
-  # # emby:
-  # #   image: nvllsvm/emby-unlocked
-  # #   container_name: "ArchEmby"
-  # #   hostname: "ArchEmbyDocker"
-  # #   restart: unless-stopped
-  # #   # network_mode: host
-  # #   networks:
-  # #     - webgateway
-  # #   expose:
-  # #     - 8096
-  # #   labels:
-  # #     - "traefik.backend=emby"
-  # #     - "traefik.port=8096"
-  # #     - "traefik.frontend.rule=PathPrefix: /emby"
-  # #   volumes:
-  # #     - ${EMBY_CONFIG_PATH}:/config
-  # #     - ${EMBY_TRANSCODE_PATH}:/transcode
-  # #     - ${EMBY_TV_PATH}:/media/Storage/TV
-  # #     - ${EMBY_ANIME_PATH}:/media/Storage/Anime
-  # #     - ${EMBY_MOVIES_PATH}:/media/Storage/Movies
-  # #     - ${EMBY_VIDEOS_PATH}:/media/Storage/Videos
-  # #     - ${EMBY_EXTRA_TV_PATH}:/media/Xiaomi/TV
-  # #     - ${EMBY_EXTRA_ANIME_PATH}:/media/Xiaomi/Anime
-  # #     - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
-  # #     - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
+  # # Emby
+  # emby:
+  #   image: nvllsvm/emby-unlocked
+  #   container_name: "ArchEmby"
+  #   hostname: "ArchEmbyDocker"
+  #   restart: unless-stopped
+  #   # network_mode: host
+  #   networks:
+  #     - webgateway
+  #   expose:
+  #     - 8096
+  #   volumes:
+  #     - ${EMBY_CONFIG_PATH}:/config
+  #     - ${EMBY_TRANSCODE_PATH}:/transcode
+  #     - ${EMBY_TV_PATH}:/media/Storage/TV
+  #     - ${EMBY_ANIME_PATH}:/media/Storage/Anime
+  #     - ${EMBY_MOVIES_PATH}:/media/Storage/Movies
+  #     - ${EMBY_VIDEOS_PATH}:/media/Storage/Videos
+  #     - ${EMBY_EXTRA_TV_PATH}:/media/Xiaomi/TV
+  #     - ${EMBY_EXTRA_ANIME_PATH}:/media/Xiaomi/Anime
+  #     - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
+  #     - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
 
   # Calibre web
   caliweb:
@@ -268,6 +264,19 @@ services:
       - ${TRANSMISSION_CONFIG_PATH}:/config
       - ${TRANSMISSION_WATCH_PATH}:/watch
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+
+  # Sabnzbd [Usenet]
+  sabnzbd:
+    image: linuxserver/sabnzbd:latest
+    container_name: "Sabnzbd"
+    networks:
+      - webgateway
+    expose:
+      - 8080
+    volumes:
+      - ${SAB_CONFIG_PATH}:/config
+      - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
+      - ${SAB_DOWNLOAD_PATH}:/downloads
 
   # Radarr [Movies]
   radarr:

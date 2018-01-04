@@ -17,6 +17,7 @@ Currently should be running:
 * Traefik to rewrite to locations on a single domain
 * Watchtower to update your images every 12 hours with email notifications
 
+
 ## Notes
 
 The nginx dockerfile hardcodes obtaining and setting permissions for organizr.
