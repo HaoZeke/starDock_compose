@@ -85,7 +85,7 @@ services:
 
   # Plex
   plex:
-    image: linuxserver/plex 
+    image: wernight/plex-media-server:autoupdate
     container_name: "ArchPlex"
     hostname: "ArchPlexDocker"
     restart: unless-stopped
@@ -94,6 +94,8 @@ services:
       - webgateway
     expose:
       - 32400
+    environment:
+      - VERSION=${PLEX_VERSION}
     volumes:
       - ${PLEX_CONFIG_PATH}:/config
       - ${PLEX_TRANSCODE_PATH}:/transcode
