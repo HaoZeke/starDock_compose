@@ -4,6 +4,11 @@
 
 version: '3'
 
+# Networking
+networks:
+    webgateway:
+      driver: bridge
+
 services:
 
   # Reverse Proxy
@@ -148,7 +153,7 @@ services:
 
   # Airsonic
   airsonic:
-    image: linuxserver/airsonic
+    image: lscr.io/linuxserver/airsonic
     container_name: "Airsonic"
     networks:
       - webgateway
@@ -210,7 +215,7 @@ services:
   #   depends_on:
   #     - mpd
   #   networks:
-  #     - webgateway 
+  #     - webgateway
 
   # # Interface and Backends
   # ##########################
@@ -231,7 +236,7 @@ services:
 
   # Ombi [Requests]
   ombi:
-    image: linuxserver/ombi:latest
+    image: lscr.io/linuxserver/ombi:latest
     container_name: "Ombi"
     networks:
       - webgateway
@@ -244,7 +249,7 @@ services:
 
   # Jackett [Tracker Aggregation]
   jackett:
-    image: linuxserver/jackett:latest
+    image: lscr.io/linuxserver/jackett
     container_name: "Jackett"
     networks:
       - webgateway
@@ -256,7 +261,7 @@ services:
 
   # Transmission [Torrents]
   transmission:
-    image: linuxserver/transmission:latest
+    image: lscr.io/linuxserver/transmission:latest
     container_name: "Transmission"
     networks:
       - webgateway
@@ -269,7 +274,7 @@ services:
 
   # Sabnzbd [Usenet]
   sabnzbd:
-    image: linuxserver/sabnzbd:latest
+    image: lscr.io/linuxserver/sabnzbd:latest
     container_name: "Sabnzbd"
     networks:
       - webgateway
@@ -282,7 +287,7 @@ services:
 
   # Radarr [Movies]
   radarr:
-    image: linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr:latest
     container_name: "Radarr"
     networks:
       - webgateway
@@ -297,7 +302,7 @@ services:
 
   # Sonarr [TV Stuff]
   sonarr:
-    image: linuxserver/sonarr:latest
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: "Sonarr"
     networks:
       - webgateway
@@ -313,7 +318,7 @@ services:
 
   # Headphones [Music Stuff]
   headphones:
-    image: linuxserver/headphones:latest
+    image: lscr.io/linuxserver/headphones:latest
     container_name: "Headphones"
     networks:
       - webgateway
@@ -328,7 +333,7 @@ services:
 
   # LazyLibrarian [Book Stuff]
   lazylib:
-    image: linuxserver/lazylibrarian:latest
+    image: lscr.io/linuxserver/lazylibrarian:latest
     container_name: "LazyLibrarian"
     networks:
       - webgateway
@@ -340,7 +345,3 @@ services:
       - ${CALIBRE_LIBRARY_PATH}:/books
     depends_on:
       - transmission
-
-networks:
-    webgateway:
-      driver: bridge
