@@ -17,23 +17,36 @@ services:
   # Traefik
 
   proxy:
-    image: traefik
+    image: traefik:v2.2
     container_name: Traefik
     networks:
       - webgateway
     ports:
-      - "80:80"
-      - "8080:8080"
+      - 80:80
+      - 443:443
+      - 8080:8080
     depends_on:
       - portainer
       - plex
       - plexpy
-      - organizr
-      - music
-      - caliweb
+      # - airsonic
+      # - caliweb
     volumes:
       - ${DSOCK}:/var/run/docker.sock
-      - ./configs/traefik.toml:/traefik.toml
+      # - ./configs/traefik.toml:/traefik.toml
+      - ./log/:/etc/traefik/log/
+    command:
+      - --global.checkNewVersion=true
+      - --global.sendAnonymousUsage=true
+
+      - --log.filePath=/log/traefik.log
+      - --log.level=DEBUG
+      - --accessLog.filePath=/log/access.log
+
+      - --api.insecure=true
+      - --entryPoints.web.address=:80
+
+      - --providers.docker.exposedByDefault=true
 
   php:
     image: haozeke/php_zip_alpine
