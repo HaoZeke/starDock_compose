@@ -88,10 +88,19 @@ services:
       - 4600:9000
     networks:
       - webgateway
-    expose:
-      - 9000
     volumes:
       - ${PORTAINER_DATA_PATH}:/data
+      - ${DSOCK}:/var/run/docker.sock
+
+  # Frontend
+  flame:
+    image: pawelmalak/flame:latest
+    container_name: flame
+    ports:
+      - 5005:5005
+    restart: unless-stopped
+    volumes:
+      - ${FLAME_DATA_PATH}:/app/data
       - ${DSOCK}:/var/run/docker.sock
 
   # Media Servers
