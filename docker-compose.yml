@@ -27,10 +27,8 @@ services:
       - 8080:8080
     depends_on:
       - portainer
-      - plex
-      - plexpy
-      # - airsonic
-      # - caliweb
+      - airsonic
+      - caliweb
     volumes:
       - ${DSOCK}:/var/run/docker.sock
       # - ./configs/traefik.toml:/traefik.toml
@@ -61,7 +59,7 @@ services:
   # Management Tools
   ###################
 
-  # WatchTower
+  # # WatchTower
 
   watchtower:
     image: v2tec/watchtower
@@ -98,48 +96,48 @@ services:
 
   # Media Servers
 
-  # Plex
-  plex:
-    image: wernight/plex-media-server:latest
-    container_name: "ArchPlex"
-    hostname: "ArchPlexDocker"
-    restart: unless-stopped
-    # network_mode: host
-    networks:
-      - webgateway
-    ports:
-    # for access to the Plex Media Server [required]
-      - "32400:32400"
-    # for access to the Plex DLNA Server
-      - "1900:1900/udp"
-      - "32469:32469"
-    # for controlling Plex Home Theater via Plex Companion
-      - "3005:3005"
-    # for older Bonjour/Avahi network discovery
-      - "5353:5353/udp"
-    # for controlling Plex for Roku via Plex Companion
-      - "8324:8324"
-    # for current GDM network discovery
-      - "32410:32410/udp"
-      - "32412:32412/udp"
-      - "32413:32413/udp"
-      - "32414:32414/udp"
-    expose:
-      - 32400
-    environment:
-      - VERSION=${PLEX_VERSION}
-    volumes:
-      - ${PLEX_CONFIG_PATH}:/config
-      - ${PLEX_TRANSCODE_PATH}:/transcode
-      - ${PLEX_LOGS_PATH}:/logs
-      - ${PLEX_TV_PATH}:/data/Storage/TV
-      - ${PLEX_ANIME_PATH}:/data/Storage/Anime
-      - ${PLEX_MOVIES_PATH}:/data/Storage/Movies
-      - ${PLEX_VIDEOS_PATH}:/data/Storage/Videos
-      - ${PLEX_EXTRA_TV_PATH}:/data/Xiaomi/TV
-      - ${PLEX_EXTRA_ANIME_PATH}:/data/Xiaomi/Anime
-      - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
-      - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
+  # # Plex
+  # plex:
+  #   image: wernight/plex-media-server:latest
+  #   container_name: "ArchPlex"
+  #   hostname: "ArchPlexDocker"
+  #   restart: unless-stopped
+  #   # network_mode: host
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #   # for access to the Plex Media Server [required]
+  #     - "32400:32400"
+  #   # for access to the Plex DLNA Server
+  #     - "1900:1900/udp"
+  #     - "32469:32469"
+  #   # for controlling Plex Home Theater via Plex Companion
+  #     - "3005:3005"
+  #   # for older Bonjour/Avahi network discovery
+  #     - "5353:5353/udp"
+  #   # for controlling Plex for Roku via Plex Companion
+  #     - "8324:8324"
+  #   # for current GDM network discovery
+  #     - "32410:32410/udp"
+  #     - "32412:32412/udp"
+  #     - "32413:32413/udp"
+  #     - "32414:32414/udp"
+  #   expose:
+  #     - 32400
+  #   environment:
+  #     - VERSION=${PLEX_VERSION}
+  #   volumes:
+  #     - ${PLEX_CONFIG_PATH}:/config
+  #     - ${PLEX_TRANSCODE_PATH}:/transcode
+  #     - ${PLEX_LOGS_PATH}:/logs
+  #     - ${PLEX_TV_PATH}:/data/Storage/TV
+  #     - ${PLEX_ANIME_PATH}:/data/Storage/Anime
+  #     - ${PLEX_MOVIES_PATH}:/data/Storage/Movies
+  #     - ${PLEX_VIDEOS_PATH}:/data/Storage/Videos
+  #     - ${PLEX_EXTRA_TV_PATH}:/data/Xiaomi/TV
+  #     - ${PLEX_EXTRA_ANIME_PATH}:/data/Xiaomi/Anime
+  #     - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
+  #     - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
   # # Emby
   # emby:
@@ -170,8 +168,8 @@ services:
     container_name: "CalibreWeb"
     networks:
       - webgateway
-    expose:
-      - 8083
+    ports:
+      - 8083:8083
     environment:
       - USE_CONFIG_DIR=true
     volumes:
@@ -184,8 +182,8 @@ services:
     container_name: "Airsonic"
     networks:
       - webgateway
-    expose:
-      - 4040
+    ports:
+      - 4040:4040
     environment:
       - CONTEXT_PATH=/airsonic
     volumes:
@@ -247,32 +245,32 @@ services:
   # # Interface and Backends
   # ##########################
 
-  # PlexPy [Stats]
-  plexpy:
-    image: linuxserver/plexpy:latest
-    container_name: "PlexPy"
-    networks:
-      - webgateway
-    expose:
-      - 8181
-    volumes:
-      - ${PLEXPY_CONFIG_PATH}:/config
-      - ${PLEX_LOGS_PATH}:/logs
-    depends_on:
-      - plex
-
-  # # Ombi [Requests]
-  # ombi:
-  #   image: lscr.io/linuxserver/ombi:latest
-  #   container_name: "Ombi"
+  # # PlexPy [Stats]
+  # plexpy:
+  #   image: linuxserver/plexpy:latest
+  #   container_name: "PlexPy"
   #   networks:
   #     - webgateway
   #   expose:
-  #     - 3579
+  #     - 8181
   #   volumes:
-  #     - ${OMBI_CONFIG_PATH}:/config
+  #     - ${PLEXPY_CONFIG_PATH}:/config
+  #     - ${PLEX_LOGS_PATH}:/logs
   #   depends_on:
   #     - plex
+
+  # # # Ombi [Requests]
+  # # ombi:
+  # #   image: lscr.io/linuxserver/ombi:latest
+  # #   container_name: "Ombi"
+  # #   networks:
+  # #     - webgateway
+  # #   expose:
+  # #     - 3579
+  # #   volumes:
+  # #     - ${OMBI_CONFIG_PATH}:/config
+  # #   depends_on:
+  # #     - plex
 
   # Jackett [Tracker Aggregation]
   jackett:
@@ -280,8 +278,8 @@ services:
     container_name: "Jackett"
     networks:
       - webgateway
-    expose:
-      - 9117
+    ports:
+      - 9117:9117
     volumes:
       - ${JACKETT_CONFIG_PATH}:/config
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
@@ -292,8 +290,8 @@ services:
     container_name: "Transmission"
     networks:
       - webgateway
-    expose:
-      - 9091
+    ports:
+      - 9091:9091
     volumes:
       - ${TRANSMISSION_CONFIG_PATH}:/config
       - ${TRANSMISSION_WATCH_PATH}:/watch
@@ -305,8 +303,8 @@ services:
     container_name: "Sabnzbd"
     networks:
       - webgateway
-    expose:
-      - 8080
+    ports:
+      - 9092:8080
     volumes:
       - ${SAB_CONFIG_PATH}:/config
       - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
@@ -318,8 +316,8 @@ services:
     container_name: "Radarr"
     networks:
       - webgateway
-    expose:
-      - 7878
+    ports:
+      - 9093:7878
     volumes:
       - ${RADARR_CONFIG_PATH}:/config
       - ${PLEX_MOVIES_PATH}:/movies
@@ -333,8 +331,8 @@ services:
     container_name: "Sonarr"
     networks:
       - webgateway
-    expose:
-      - 8989
+    ports:
+      - 9094:8989
     volumes:
       - ${SONARR_CONFIG_PATH}:/config
       - ${PLEX_TV_PATH}:/tv
@@ -349,8 +347,8 @@ services:
     container_name: "Headphones"
     networks:
       - webgateway
-    expose:
-      - 8181
+    ports:
+      - 9095:8181
     volumes:
       - ${HEADPHONES_CONFIG_PATH}:/config
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
@@ -364,8 +362,8 @@ services:
     container_name: "LazyLibrarian"
     networks:
       - webgateway
-    expose:
-      - 5299
+    ports:
+      - 9096:5299
     volumes:
       - ${LAZYLIB_CONFIG_PATH}:/config
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
