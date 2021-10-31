@@ -53,7 +53,7 @@ services:
       - webgateway
     volumes:
       - ${ORGANIZR_CONFIG_PATH}:/config
-      - ${WEBAPP_PATH}:/www  
+      - ${WEBAPP_PATH}:/www
 
 
   # Management Tools
@@ -103,279 +103,307 @@ services:
       - ${FLAME_DATA_PATH}:/app/data
       - ${DSOCK}:/var/run/docker.sock
 
-  # Media Servers
+  # # Media Servers
 
-  # # Plex
-  # plex:
-  #   image: wernight/plex-media-server:latest
-  #   container_name: "ArchPlex"
-  #   hostname: "ArchPlexDocker"
-  #   restart: unless-stopped
-  #   # network_mode: host
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #   # for access to the Plex Media Server [required]
-  #     - "32400:32400"
-  #   # for access to the Plex DLNA Server
-  #     - "1900:1900/udp"
-  #     - "32469:32469"
-  #   # for controlling Plex Home Theater via Plex Companion
-  #     - "3005:3005"
-  #   # for older Bonjour/Avahi network discovery
-  #     - "5353:5353/udp"
-  #   # for controlling Plex for Roku via Plex Companion
-  #     - "8324:8324"
-  #   # for current GDM network discovery
-  #     - "32410:32410/udp"
-  #     - "32412:32412/udp"
-  #     - "32413:32413/udp"
-  #     - "32414:32414/udp"
-  #   expose:
-  #     - 32400
-  #   environment:
-  #     - VERSION=${PLEX_VERSION}
-  #   volumes:
-  #     - ${PLEX_CONFIG_PATH}:/config
-  #     - ${PLEX_TRANSCODE_PATH}:/transcode
-  #     - ${PLEX_LOGS_PATH}:/logs
-  #     - ${PLEX_TV_PATH}:/data/Storage/TV
-  #     - ${PLEX_ANIME_PATH}:/data/Storage/Anime
-  #     - ${PLEX_MOVIES_PATH}:/data/Storage/Movies
-  #     - ${PLEX_VIDEOS_PATH}:/data/Storage/Videos
-  #     - ${PLEX_EXTRA_TV_PATH}:/data/Xiaomi/TV
-  #     - ${PLEX_EXTRA_ANIME_PATH}:/data/Xiaomi/Anime
-  #     - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
-  #     - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
+  # # # Plex
+  # # plex:
+  # #   image: wernight/plex-media-server:latest
+  # #   container_name: "ArchPlex"
+  # #   hostname: "ArchPlexDocker"
+  # #   restart: unless-stopped
+  # #   # network_mode: host
+  # #   networks:
+  # #     - webgateway
+  # #   ports:
+  # #   # for access to the Plex Media Server [required]
+  # #     - "32400:32400"
+  # #   # for access to the Plex DLNA Server
+  # #     - "1900:1900/udp"
+  # #     - "32469:32469"
+  # #   # for controlling Plex Home Theater via Plex Companion
+  # #     - "3005:3005"
+  # #   # for older Bonjour/Avahi network discovery
+  # #     - "5353:5353/udp"
+  # #   # for controlling Plex for Roku via Plex Companion
+  # #     - "8324:8324"
+  # #   # for current GDM network discovery
+  # #     - "32410:32410/udp"
+  # #     - "32412:32412/udp"
+  # #     - "32413:32413/udp"
+  # #     - "32414:32414/udp"
+  # #   expose:
+  # #     - 32400
+  # #   environment:
+  # #     - VERSION=${PLEX_VERSION}
+  # #   volumes:
+  # #     - ${PLEX_CONFIG_PATH}:/config
+  # #     - ${PLEX_TRANSCODE_PATH}:/transcode
+  # #     - ${PLEX_LOGS_PATH}:/logs
+  # #     - ${PLEX_TV_PATH}:/data/Storage/TV
+  # #     - ${PLEX_ANIME_PATH}:/data/Storage/Anime
+  # #     - ${PLEX_MOVIES_PATH}:/data/Storage/Movies
+  # #     - ${PLEX_VIDEOS_PATH}:/data/Storage/Videos
+  # #     - ${PLEX_EXTRA_TV_PATH}:/data/Xiaomi/TV
+  # #     - ${PLEX_EXTRA_ANIME_PATH}:/data/Xiaomi/Anime
+  # #     - ${PLEX_EXTRA_MOVIES_PATH}:/data/Xiaomi/Movies
+  # #     - ${PLEX_EXTRA_VIDEOS_PATH}:/data/Xiaomi/Videos
 
-  # # Emby
-  # emby:
-  #   image: nvllsvm/emby-unlocked
-  #   container_name: "ArchEmby"
-  #   hostname: "ArchEmbyDocker"
-  #   restart: unless-stopped
-  #   # network_mode: host
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 8096
-  #   volumes:
-  #     - ${EMBY_CONFIG_PATH}:/config
-  #     - ${EMBY_TRANSCODE_PATH}:/transcode
-  #     - ${EMBY_TV_PATH}:/media/Storage/TV
-  #     - ${EMBY_ANIME_PATH}:/media/Storage/Anime
-  #     - ${EMBY_MOVIES_PATH}:/media/Storage/Movies
-  #     - ${EMBY_VIDEOS_PATH}:/media/Storage/Videos
-  #     - ${EMBY_EXTRA_TV_PATH}:/media/Xiaomi/TV
-  #     - ${EMBY_EXTRA_ANIME_PATH}:/media/Xiaomi/Anime
-  #     - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
-  #     - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
-
-  # Calibre web
-  caliweb:
-    image: technosoft2000/calibre-web
-    container_name: "CalibreWeb"
-    networks:
-      - webgateway
-    ports:
-      - 8083:8083
-    environment:
-      - USE_CONFIG_DIR=true
-    volumes:
-      - ${CALIBRE_APP_PATH}:/calibre-web
-      - ${CALIBRE_LIBRARY_PATH}:/books
-
-  # Airsonic
-  airsonic:
-    image: lscr.io/linuxserver/airsonic
-    container_name: "Airsonic"
-    networks:
-      - webgateway
-    ports:
-      - 4040:4040
-    environment:
-      - CONTEXT_PATH=/airsonic
-    volumes:
-      - ${MUSIC_CONFIG_PATH}:/config
-      - ${MUSIC_LIBRARY_PATH}:/music
-      - ${MUSIC_PLAYLISTS_PATH}:/playlists
-      - ${MUSIC_PODCASTS_PATH}:/podcasts
-      - ${MUSIC_MEDIA_PATH}:/media
-
-  # # MPD Icecast YMPD
-
-  # icecast:
-  #   image: vitiman/alpine-icecast:latest
-  #   container_name: "Icecast"
-  #   ports:
-  #     - "8000:8000"
-  #   expose:
-  #     - 8000
-  #   networks:
-  #     - webgateway
-
-  # # Add your host volumen in path/to/... or add your own volume below
-  # mpd:
-  #   image: vitiman/alpine-mpd:latest
-  #   container_name: "MPD"
-  #   ports:
-  #     - "6600:6600"
-  #   expose:
-  #     - 6600
-  #   depends_on:
-  #     - icecast
-  #   networks:
-  #     - webgateway
-  #   volumes:
-  #     - ${MUSIC_LIBRARY_PATH}:/var/lib/mpd/music
-  #     - ${MPD_PLAYLISTS_PATH}:/var/lib/mpd/playlists
-  #     - ${MPD_DB_PATH}:/var/lib/mpd/database
-
-  # sima:
-  #   image: vitiman/alpine-sima:latest
-  #   container_name: "SIMA"
-  #   depends_on:
-  #     - mpd
-  #   networks:
-  #     - webgateway
-
-  # ympd:
-  #   image: vitiman/alpine-ympd:latest
-  #   container_name: "YMPD"
-  #   ports:
-  #     - "8080:8080"
-  #   expose:
-  #     - 8080
-  #   depends_on:
-  #     - mpd
-  #   networks:
-  #     - webgateway
-
-  # # Interface and Backends
-  # ##########################
-
-  # # PlexPy [Stats]
-  # plexpy:
-  #   image: linuxserver/plexpy:latest
-  #   container_name: "PlexPy"
-  #   networks:
-  #     - webgateway
-  #   expose:
-  #     - 8181
-  #   volumes:
-  #     - ${PLEXPY_CONFIG_PATH}:/config
-  #     - ${PLEX_LOGS_PATH}:/logs
-  #   depends_on:
-  #     - plex
-
-  # # # Ombi [Requests]
-  # # ombi:
-  # #   image: lscr.io/linuxserver/ombi:latest
-  # #   container_name: "Ombi"
+  # # # Emby
+  # # emby:
+  # #   image: nvllsvm/emby-unlocked
+  # #   container_name: "ArchEmby"
+  # #   hostname: "ArchEmbyDocker"
+  # #   restart: unless-stopped
+  # #   # network_mode: host
   # #   networks:
   # #     - webgateway
   # #   expose:
-  # #     - 3579
+  # #     - 8096
   # #   volumes:
-  # #     - ${OMBI_CONFIG_PATH}:/config
+  # #     - ${EMBY_CONFIG_PATH}:/config
+  # #     - ${EMBY_TRANSCODE_PATH}:/transcode
+  # #     - ${EMBY_TV_PATH}:/media/Storage/TV
+  # #     - ${EMBY_ANIME_PATH}:/media/Storage/Anime
+  # #     - ${EMBY_MOVIES_PATH}:/media/Storage/Movies
+  # #     - ${EMBY_VIDEOS_PATH}:/media/Storage/Videos
+  # #     - ${EMBY_EXTRA_TV_PATH}:/media/Xiaomi/TV
+  # #     - ${EMBY_EXTRA_ANIME_PATH}:/media/Xiaomi/Anime
+  # #     - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
+  # #     - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
+
+  # # Calibre web
+  # caliweb:
+  #   image: technosoft2000/calibre-web
+  #   container_name: "CalibreWeb"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 8083:8083
+  #   environment:
+  #     - USE_CONFIG_DIR=true
+  #   volumes:
+  #     - ${CALIBRE_APP_PATH}:/calibre-web
+  #     - ${CALIBRE_LIBRARY_PATH}:/books
+
+  # # Airsonic
+  # airsonic:
+  #   image: lscr.io/linuxserver/airsonic
+  #   container_name: "Airsonic"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 4040:4040
+  #   environment:
+  #     - CONTEXT_PATH=/airsonic
+  #   volumes:
+  #     - ${MUSIC_CONFIG_PATH}:/config
+  #     - ${MUSIC_LIBRARY_PATH}:/music
+  #     - ${MUSIC_PLAYLISTS_PATH}:/playlists
+  #     - ${MUSIC_PODCASTS_PATH}:/podcasts
+  #     - ${MUSIC_MEDIA_PATH}:/media
+
+  # # # MPD Icecast YMPD
+
+  # # icecast:
+  # #   image: vitiman/alpine-icecast:latest
+  # #   container_name: "Icecast"
+  # #   ports:
+  # #     - "8000:8000"
+  # #   expose:
+  # #     - 8000
+  # #   networks:
+  # #     - webgateway
+
+  # # # Add your host volumen in path/to/... or add your own volume below
+  # # mpd:
+  # #   image: vitiman/alpine-mpd:latest
+  # #   container_name: "MPD"
+  # #   ports:
+  # #     - "6600:6600"
+  # #   expose:
+  # #     - 6600
+  # #   depends_on:
+  # #     - icecast
+  # #   networks:
+  # #     - webgateway
+  # #   volumes:
+  # #     - ${MUSIC_LIBRARY_PATH}:/var/lib/mpd/music
+  # #     - ${MPD_PLAYLISTS_PATH}:/var/lib/mpd/playlists
+  # #     - ${MPD_DB_PATH}:/var/lib/mpd/database
+
+  # # sima:
+  # #   image: vitiman/alpine-sima:latest
+  # #   container_name: "SIMA"
+  # #   depends_on:
+  # #     - mpd
+  # #   networks:
+  # #     - webgateway
+
+  # # ympd:
+  # #   image: vitiman/alpine-ympd:latest
+  # #   container_name: "YMPD"
+  # #   ports:
+  # #     - "8080:8080"
+  # #   expose:
+  # #     - 8080
+  # #   depends_on:
+  # #     - mpd
+  # #   networks:
+  # #     - webgateway
+
+  # # # Interface and Backends
+  # # ##########################
+
+  # # # PlexPy [Stats]
+  # # plexpy:
+  # #   image: linuxserver/plexpy:latest
+  # #   container_name: "PlexPy"
+  # #   networks:
+  # #     - webgateway
+  # #   expose:
+  # #     - 8181
+  # #   volumes:
+  # #     - ${PLEXPY_CONFIG_PATH}:/config
+  # #     - ${PLEX_LOGS_PATH}:/logs
   # #   depends_on:
   # #     - plex
 
-  # Jackett [Tracker Aggregation]
-  jackett:
-    image: lscr.io/linuxserver/jackett
-    container_name: "Jackett"
-    networks:
-      - webgateway
-    ports:
-      - 9117:9117
-    volumes:
-      - ${JACKETT_CONFIG_PATH}:/config
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  # # # # Ombi [Requests]
+  # # # ombi:
+  # # #   image: lscr.io/linuxserver/ombi:latest
+  # # #   container_name: "Ombi"
+  # # #   networks:
+  # # #     - webgateway
+  # # #   expose:
+  # # #     - 3579
+  # # #   volumes:
+  # # #     - ${OMBI_CONFIG_PATH}:/config
+  # # #   depends_on:
+  # # #     - plex
 
-  # Transmission [Torrents]
-  transmission:
-    image: lscr.io/linuxserver/transmission:latest
-    container_name: "Transmission"
-    networks:
-      - webgateway
-    ports:
-      - 9091:9091
-    volumes:
-      - ${TRANSMISSION_CONFIG_PATH}:/config
-      - ${TRANSMISSION_WATCH_PATH}:/watch
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  # # Jackett [Tracker Aggregation]
+  # jackett:
+  #   image: lscr.io/linuxserver/jackett
+  #   container_name: "Jackett"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9117:9117
+  #   volumes:
+  #     - ${JACKETT_CONFIG_PATH}:/config
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # Sabnzbd [Usenet]
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: "Sabnzbd"
-    networks:
-      - webgateway
-    ports:
-      - 9092:8080
-    volumes:
-      - ${SAB_CONFIG_PATH}:/config
-      - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
-      - ${SAB_DOWNLOAD_PATH}:/downloads
+  # # Transmission [Torrents]
+  # transmission:
+  #   image: lscr.io/linuxserver/transmission:latest
+  #   container_name: "Transmission"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9091:9091
+  #   volumes:
+  #     - ${TRANSMISSION_CONFIG_PATH}:/config
+  #     - ${TRANSMISSION_WATCH_PATH}:/watch
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # Radarr [Movies]
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: "Radarr"
-    networks:
-      - webgateway
-    ports:
-      - 9093:7878
-    volumes:
-      - ${RADARR_CONFIG_PATH}:/config
-      - ${PLEX_MOVIES_PATH}:/movies
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-    depends_on:
-      - transmission
+  # # Sabnzbd [Usenet]
+  # sabnzbd:
+  #   image: lscr.io/linuxserver/sabnzbd:latest
+  #   container_name: "Sabnzbd"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9092:8080
+  #   volumes:
+  #     - ${SAB_CONFIG_PATH}:/config
+  #     - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
+  #     - ${SAB_DOWNLOAD_PATH}:/downloads
 
-  # Sonarr [TV Stuff]
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: "Sonarr"
-    networks:
-      - webgateway
-    ports:
-      - 9094:8989
-    volumes:
-      - ${SONARR_CONFIG_PATH}:/config
-      - ${PLEX_TV_PATH}:/tv
-      - ${PLEX_ANIME_PATH}:/anime
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-    depends_on:
-      - transmission
+  # # Radarr [Movies]
+  # radarr:
+  #   image: lscr.io/linuxserver/radarr:latest
+  #   container_name: "Radarr"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9093:7878
+  #   volumes:
+  #     - ${RADARR_CONFIG_PATH}:/config
+  #     - ${PLEX_MOVIES_PATH}:/movies
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  #   depends_on:
+  #     - transmission
 
-  # Headphones [Music Stuff]
-  headphones:
-    image: lscr.io/linuxserver/headphones:latest
-    container_name: "Headphones"
-    networks:
-      - webgateway
-    ports:
-      - 9095:8181
-    volumes:
-      - ${HEADPHONES_CONFIG_PATH}:/config
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-      - ${MUSIC_LIBRARY_PATH}:/music
-    depends_on:
-      - transmission
+  # # Sonarr [TV Stuff]
+  # sonarr:
+  #   image: lscr.io/linuxserver/sonarr:latest
+  #   container_name: "Sonarr"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9094:8989
+  #   volumes:
+  #     - ${SONARR_CONFIG_PATH}:/config
+  #     - ${PLEX_TV_PATH}:/tv
+  #     - ${PLEX_ANIME_PATH}:/anime
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  #   depends_on:
+  #     - transmission
 
-  # LazyLibrarian [Book Stuff]
-  lazylib:
-    image: lscr.io/linuxserver/lazylibrarian:latest
-    container_name: "LazyLibrarian"
-    networks:
-      - webgateway
-    ports:
-      - 9096:5299
+  # # Headphones [Music Stuff]
+  # headphones:
+  #   image: lscr.io/linuxserver/headphones:latest
+  #   container_name: "Headphones"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9095:8181
+  #   volumes:
+  #     - ${HEADPHONES_CONFIG_PATH}:/config
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  #     - ${MUSIC_LIBRARY_PATH}:/music
+  #   depends_on:
+  #     - transmission
+
+  # # LazyLibrarian [Book Stuff]
+  # lazylib:
+  #   image: lscr.io/linuxserver/lazylibrarian:latest
+  #   container_name: "LazyLibrarian"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9096:5299
+  #   volumes:
+  #     - ${LAZYLIB_CONFIG_PATH}:/config
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  #     - ${CALIBRE_LIBRARY_PATH}:/books
+  #   depends_on:
+  #     - transmission
+
+  # File management
+
+  # Resilio
+  resilio-sync:
+    image: lscr.io/linuxserver/resilio-sync
+    container_name: resilio-sync
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${SEAFILE_TZ}
     volumes:
-      - ${LAZYLIB_CONFIG_PATH}:/config
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-      - ${CALIBRE_LIBRARY_PATH}:/books
-    depends_on:
-      - transmission
+      - ${RESILIO_CONF}:/config
+      - ${RESILIO_DOWNLOADS}:/downloads
+      - ${RESILIO_SYNC}:/sync
+      - ${RESILIO_LIBRARY}:/sync/Library
+      - ${RESILIO_MOVIES}:/sync/Movies
+      - ${RESILIO_TV}:/sync/TV
+      - ${RESILIO_MUSIC}:/sync/Music
+      - ${RESILIO_ANIME}:/sync/Anime
+      - ${RESILIO_XIA_MOVIES}:/sync/Xiaomi/Movies
+      - ${RESILIO_XIA_TV}:/sync/Xiaomi/TV
+      - ${RESILIO_XIA_MUSIC}:/sync/Xiaomi/Music
+      - ${RESILIO_XIA_ANIME}:/sync/Xiaomi/Anime
+    ports:
+      - 8888:8888
+      - 55555:55555
+    restart: unless-stopped
