@@ -173,17 +173,20 @@ services:
 
   # Calibre web
   caliweb:
-    image: technosoft2000/calibre-web
+    image: lscr.io/linuxserver/calibre-web
     container_name: "CalibreWeb"
     networks:
       - webgateway
     ports:
       - 8083:8083
     environment:
-      - USE_CONFIG_DIR=true
+      - OAUTHLIB_RELAX_TOKEN_SCOPE=1
+      - DOCKER_MODS=linuxserver/calibre-web:calibre
+      - TZ=${TZ}
     volumes:
       - ${CALIBRE_APP_PATH}:/calibre-web
       - ${CALIBRE_LIBRARY_PATH}:/books
+      - ${CALIBRE_CONFIG_PATH}:/config
 
   # Airsonic
   airsonic:
