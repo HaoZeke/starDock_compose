@@ -184,7 +184,7 @@ services:
       - DOCKER_MODS=linuxserver/calibre-web:calibre
       - TZ=${TZ}
     volumes:
-      - ${CALIBRE_APP_PATH}:/calibre-web
+      - ${CALIBRE_APP_PATH}:/app/calibre-web
       - ${CALIBRE_LIBRARY_PATH}:/books
       - ${CALIBRE_CONFIG_PATH}:/config
 
@@ -309,18 +309,18 @@ services:
       - ${TRANSMISSION_WATCH_PATH}:/watch
       - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # Sabnzbd [Usenet]
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: "Sabnzbd"
-    networks:
-      - webgateway
-    ports:
-      - 9092:8080
-    volumes:
-      - ${SAB_CONFIG_PATH}:/config
-      - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
-      - ${SAB_DOWNLOAD_PATH}:/downloads
+  # # Sabnzbd [Usenet]
+  # sabnzbd:
+  #   image: lscr.io/linuxserver/sabnzbd:latest
+  #   container_name: "Sabnzbd"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9092:8080
+  #   volumes:
+  #     - ${SAB_CONFIG_PATH}:/config
+  #     - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
+  #     - ${SAB_DOWNLOAD_PATH}:/downloads
 
   # Radarr [Movies]
   radarr:
@@ -353,35 +353,35 @@ services:
     depends_on:
       - transmission
 
-  # Headphones [Music Stuff]
-  headphones:
-    image: lscr.io/linuxserver/headphones:latest
-    container_name: "Headphones"
-    networks:
-      - webgateway
-    ports:
-      - 9095:8181
-    volumes:
-      - ${HEADPHONES_CONFIG_PATH}:/config
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-      - ${MUSIC_LIBRARY_PATH}:/music
-    depends_on:
-      - transmission
+  # # Headphones [Music Stuff]
+  # headphones:
+  #   image: lscr.io/linuxserver/headphones:latest
+  #   container_name: "Headphones"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9095:8181
+  #   volumes:
+  #     - ${HEADPHONES_CONFIG_PATH}:/config
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  #     - ${MUSIC_LIBRARY_PATH}:/music
+  #   depends_on:
+  #     - transmission
 
-  # LazyLibrarian [Book Stuff]
-  lazylib:
-    image: lscr.io/linuxserver/lazylibrarian:latest
-    container_name: "LazyLibrarian"
-    networks:
-      - webgateway
-    ports:
-      - 9096:5299
-    volumes:
-      - ${LAZYLIB_CONFIG_PATH}:/config
-      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-      - ${CALIBRE_LIBRARY_PATH}:/books
-    depends_on:
-      - transmission
+  # # LazyLibrarian [Book Stuff]
+  # lazylib:
+  #   image: lscr.io/linuxserver/lazylibrarian:latest
+  #   container_name: "LazyLibrarian"
+  #   networks:
+  #     - webgateway
+  #   ports:
+  #     - 9096:5299
+  #   volumes:
+  #     - ${LAZYLIB_CONFIG_PATH}:/config
+  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  #     - ${CALIBRE_LIBRARY_PATH}:/books
+  #   depends_on:
+  #     - transmission
 
   # File management
 
