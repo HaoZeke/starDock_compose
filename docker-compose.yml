@@ -171,36 +171,36 @@ services:
   # #     - ${EMBY_EXTRA_MOVIES_PATH}:/media/Xiaomi/Movies
   # #     - ${EMBY_EXTRA_VIDEOS_PATH}:/media/Xiaomi/Videos
 
-  # # Calibre web
-  # caliweb:
-  #   image: technosoft2000/calibre-web
-  #   container_name: "CalibreWeb"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 8083:8083
-  #   environment:
-  #     - USE_CONFIG_DIR=true
-  #   volumes:
-  #     - ${CALIBRE_APP_PATH}:/calibre-web
-  #     - ${CALIBRE_LIBRARY_PATH}:/books
+  # Calibre web
+  caliweb:
+    image: technosoft2000/calibre-web
+    container_name: "CalibreWeb"
+    networks:
+      - webgateway
+    ports:
+      - 8083:8083
+    environment:
+      - USE_CONFIG_DIR=true
+    volumes:
+      - ${CALIBRE_APP_PATH}:/calibre-web
+      - ${CALIBRE_LIBRARY_PATH}:/books
 
-  # # Airsonic
-  # airsonic:
-  #   image: lscr.io/linuxserver/airsonic
-  #   container_name: "Airsonic"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 4040:4040
-  #   environment:
-  #     - CONTEXT_PATH=/airsonic
-  #   volumes:
-  #     - ${MUSIC_CONFIG_PATH}:/config
-  #     - ${MUSIC_LIBRARY_PATH}:/music
-  #     - ${MUSIC_PLAYLISTS_PATH}:/playlists
-  #     - ${MUSIC_PODCASTS_PATH}:/podcasts
-  #     - ${MUSIC_MEDIA_PATH}:/media
+  # Airsonic
+  airsonic:
+    image: lscr.io/linuxserver/airsonic
+    container_name: "Airsonic"
+    networks:
+      - webgateway
+    ports:
+      - 4040:4040
+    environment:
+      - CONTEXT_PATH=/airsonic
+    volumes:
+      - ${MUSIC_CONFIG_PATH}:/config
+      - ${MUSIC_LIBRARY_PATH}:/music
+      - ${MUSIC_PLAYLISTS_PATH}:/playlists
+      - ${MUSIC_PODCASTS_PATH}:/podcasts
+      - ${MUSIC_MEDIA_PATH}:/media
 
   # # # MPD Icecast YMPD
 
@@ -281,104 +281,104 @@ services:
   # # #   depends_on:
   # # #     - plex
 
-  # # Jackett [Tracker Aggregation]
-  # jackett:
-  #   image: lscr.io/linuxserver/jackett
-  #   container_name: "Jackett"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9117:9117
-  #   volumes:
-  #     - ${JACKETT_CONFIG_PATH}:/config
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  # Jackett [Tracker Aggregation]
+  jackett:
+    image: lscr.io/linuxserver/jackett
+    container_name: "Jackett"
+    networks:
+      - webgateway
+    ports:
+      - 9117:9117
+    volumes:
+      - ${JACKETT_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # # Transmission [Torrents]
-  # transmission:
-  #   image: lscr.io/linuxserver/transmission:latest
-  #   container_name: "Transmission"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9091:9091
-  #   volumes:
-  #     - ${TRANSMISSION_CONFIG_PATH}:/config
-  #     - ${TRANSMISSION_WATCH_PATH}:/watch
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+  # Transmission [Torrents]
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: "Transmission"
+    networks:
+      - webgateway
+    ports:
+      - 9091:9091
+    volumes:
+      - ${TRANSMISSION_CONFIG_PATH}:/config
+      - ${TRANSMISSION_WATCH_PATH}:/watch
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
 
-  # # Sabnzbd [Usenet]
-  # sabnzbd:
-  #   image: lscr.io/linuxserver/sabnzbd:latest
-  #   container_name: "Sabnzbd"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9092:8080
-  #   volumes:
-  #     - ${SAB_CONFIG_PATH}:/config
-  #     - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
-  #     - ${SAB_DOWNLOAD_PATH}:/downloads
+  # Sabnzbd [Usenet]
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: "Sabnzbd"
+    networks:
+      - webgateway
+    ports:
+      - 9092:8080
+    volumes:
+      - ${SAB_CONFIG_PATH}:/config
+      - ${SAB_INC_DOWN_PATH}:/incomplete-downloads
+      - ${SAB_DOWNLOAD_PATH}:/downloads
 
-  # # Radarr [Movies]
-  # radarr:
-  #   image: lscr.io/linuxserver/radarr:latest
-  #   container_name: "Radarr"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9093:7878
-  #   volumes:
-  #     - ${RADARR_CONFIG_PATH}:/config
-  #     - ${PLEX_MOVIES_PATH}:/movies
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #   depends_on:
-  #     - transmission
+  # Radarr [Movies]
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: "Radarr"
+    networks:
+      - webgateway
+    ports:
+      - 9093:7878
+    volumes:
+      - ${RADARR_CONFIG_PATH}:/config
+      - ${PLEX_MOVIES_PATH}:/movies
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
 
-  # # Sonarr [TV Stuff]
-  # sonarr:
-  #   image: lscr.io/linuxserver/sonarr:latest
-  #   container_name: "Sonarr"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9094:8989
-  #   volumes:
-  #     - ${SONARR_CONFIG_PATH}:/config
-  #     - ${PLEX_TV_PATH}:/tv
-  #     - ${PLEX_ANIME_PATH}:/anime
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #   depends_on:
-  #     - transmission
+  # Sonarr [TV Stuff]
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: "Sonarr"
+    networks:
+      - webgateway
+    ports:
+      - 9094:8989
+    volumes:
+      - ${SONARR_CONFIG_PATH}:/config
+      - ${PLEX_TV_PATH}:/tv
+      - ${PLEX_ANIME_PATH}:/anime
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+    depends_on:
+      - transmission
 
-  # # Headphones [Music Stuff]
-  # headphones:
-  #   image: lscr.io/linuxserver/headphones:latest
-  #   container_name: "Headphones"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9095:8181
-  #   volumes:
-  #     - ${HEADPHONES_CONFIG_PATH}:/config
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #     - ${MUSIC_LIBRARY_PATH}:/music
-  #   depends_on:
-  #     - transmission
+  # Headphones [Music Stuff]
+  headphones:
+    image: lscr.io/linuxserver/headphones:latest
+    container_name: "Headphones"
+    networks:
+      - webgateway
+    ports:
+      - 9095:8181
+    volumes:
+      - ${HEADPHONES_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+      - ${MUSIC_LIBRARY_PATH}:/music
+    depends_on:
+      - transmission
 
-  # # LazyLibrarian [Book Stuff]
-  # lazylib:
-  #   image: lscr.io/linuxserver/lazylibrarian:latest
-  #   container_name: "LazyLibrarian"
-  #   networks:
-  #     - webgateway
-  #   ports:
-  #     - 9096:5299
-  #   volumes:
-  #     - ${LAZYLIB_CONFIG_PATH}:/config
-  #     - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
-  #     - ${CALIBRE_LIBRARY_PATH}:/books
-  #   depends_on:
-  #     - transmission
+  # LazyLibrarian [Book Stuff]
+  lazylib:
+    image: lscr.io/linuxserver/lazylibrarian:latest
+    container_name: "LazyLibrarian"
+    networks:
+      - webgateway
+    ports:
+      - 9096:5299
+    volumes:
+      - ${LAZYLIB_CONFIG_PATH}:/config
+      - ${TRANSMISSION_DOWNLOAD_PATH}:/downloads
+      - ${CALIBRE_LIBRARY_PATH}:/books
+    depends_on:
+      - transmission
 
   # File management
 
