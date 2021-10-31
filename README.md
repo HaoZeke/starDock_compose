@@ -16,6 +16,7 @@ Currently should be running:
 * Plexpy for stats
 * Traefik to rewrite to locations on a single domain
 * Watchtower to update your images every 12 hours with email notifications
+* Resilio for file synchronization
 
 
 ## Notes
